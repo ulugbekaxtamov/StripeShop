@@ -1,5 +1,16 @@
 # StripeShop
 
+## Getting Started
+
+These instructions will help you run a copy of the project on your local machine for development and testing.
+
+### Prerequisites
+
+Install the following tools:
+
+- Docker
+- Docker Compose
+
 ### Installation and Launch
 
 1. **Cloning the repository**:
@@ -16,14 +27,42 @@
     ```
     cat example.env > .env
     ```
+    - Please fill in the `STRIPE_PUBLIC_TOKEN` and `STRIPE_SECRET_TOKEN` values in the `.env` file.
 
-4. **Create virtual environments  and install  [requirements.txt](requirements.txt)**:
+4. **Run Docker Compose**:
     ```
-    python -m venv venv
-    source venv/bin/activate
-    pip install -r requirements.txt
+    docker-compose up --build
     ```
-5. **Run**:
-    ```
-    python manage.py runserver
-    ```
+
+### API Documentation
+
+Access the Swagger documentation for API details at:
+
+```
+http://127.0.0.1:8000/redoc/
+```
+
+```
+http://127.0.0.1:8000/swagger/
+```
+
+### Project Structure
+
+```
+
+├── README.md # This file
+├── docker-compose.yaml # Docker Compose configuration for development
+├── Dockerfile # Dockerfile for the main server
+├── requirements.txt # Python dependencies
+├── .env # Environment variables
+├── main/ # Main Django project folder
+│ ├── settings.py # Import Base class here
+│ └── ...
+├── base/ # Manage soft deletion and default fields
+│ ├── apps.py
+│ ├── models.py # Base class imported here
+│ └── ...
+├── products/ # Products app
+├── user/ # User management app
+......
+```
