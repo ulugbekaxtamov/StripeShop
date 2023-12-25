@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <div class="cart-container">
+        <div class="cart-summary">
+            <div class="cart-summary-item">
+                <p class="cart-total-items">Количество товаров: <span
+                        class="total-items-count">{{ cart_count }}</span>
+                </p>
+                <p class="cart-total-items">cумма товаров: <span
+                        class="total-items-count">{{ data.total_price_items }} {{ currency }}</span></p>
+                <p class="cart-total-items">Налог: <span class="tax">{{ data.tax }}%</span></p>
+                <p class="cart-total-items">Скидка: <span class="discount">-{{ data.discount }}%</span></p>
+                <p class="cart-total-amount">Итого: <span
+                        class="total-amount">{{ data.total_amount }} {{ currency }}</span></p>
+            </div>
+
+            <label for="payment-type">Выберите тип оплаты:</label>
+            <select id="payment-type" name="payment-type">
+                <option value="usd" {% if request.GET.currency == "usd" %}selected{% endif %}>USD</option>
+                <option value="eur" {% if request.GET.currency == "eur" %}selected{% endif %}>EUR</option>
+            </select>
+            {% if item_list %}
+                <button class="btn cart-checkout-btn" id="checkout">Оформить заказ</button>
+            {% endif %}
+        </div>
+
+        {% for item in item_list %}
+            <div class="cart-item">
+                <img src="{{ item.image.url }}" alt="{{ item.name }}" class="cart-img">
+                <div class="cart-item-info">
+                    <h3>{{ item.name }}</h3>
+                    <p>{{ item.description }}</p>
+                    <p>Цена: {{ item.price }} {{ item.get_currency_display }}</p>
+                    <button class="btn cart-remove-btn" onclick="deleteToCart('{{ item.id }}')">Удалить</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function deleteToCart(itemId) {
+            $.ajax({
+                type: 'DELETE',
+                url: `/api/v1/product/cart/remove/${itemId}/`,
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                dataType: 'json',
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error("Произошла ошибка:", status, error);
+                },
+            });
+        }
+
+
+    </script>
+    <script>
+        document.querySelectorAll('#checkout').forEach(button => {
+            button.addEventListener('click', function () {
+                let loadingButtonHtml = '<button class="btn btn-primary" type="button" id="disabledBtn" disabled>' +
+                    '  Loading...' +
+                    '  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' +
+                    '</button>';
+                this.insertAdjacentHTML('afterend', loadingButtonHtml);
+                this.style.display = 'none';
+
+                $.ajax({
+                    type: 'POST',
+                    url: `{% url 'api_product:payment-order' %}`,
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        window.location.href = `/order/${data.order_id}/pay/`
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Произошла ошибка:", status, error);
+                    },
+                });
+            });
+        });
+
+    </script>
+
+    <script>
+        $("#payment-type").on('change', function (e) {
+            let currency = $("#payment-type").val();
+            window.location.href = `?currency=${currency}`;
+        });
+    </script>
+
+{% endblock %}

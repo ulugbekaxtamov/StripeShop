@@ -1,0 +1,103 @@
+<!-- checkout.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <div class="left-section">
+            <h3>Заказе ID {{ order.id }}</h3>
+            <p>Продукты: ({{ order.items.count }})шт
+                - {{ order.get_total_item_price }} {{ order.get_currency_display }}</p>
+            {% if order.discount %}
+                <p>Скидка: -{{ order.discount.percentage }} %</p>
+            {% endif %}
+            {% if order.tax %}
+                <p>Налог: {{ order.tax.percentage }} %</p>
+            {% endif %}
+            <p>Общая сумма: {{ order.get_total_amount }} {{ order.get_currency_display }}</p>
+        </div>
+        <div class="right-section">
+            <h2>Форма Оплаты</h2>
+            <form id="payment-form">
+                <div id="card-element" class="stripe-input">
+                    <!-- Элементы Stripe  -->
+                </div>
+                <div id="error-message" style="color: red;"></div>
+
+                <button id="submit-button">Оплатить</button>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+
+        let stripe = Stripe('{{ stripe_public_key }}');
+
+        let elements = stripe.elements();
+        let style = {
+            base: {
+                color: "#32325d",
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: "antialiased",
+                fontSize: "16px",
+                "::placeholder": {
+                    color: "#aab7c4"
+                }
+            },
+            invalid: {
+                color: "#fa755a",
+                iconColor: "#fa755a"
+            }
+        };
+
+        let cardElement = elements.create('card', {style: style});
+        cardElement.mount('#card-element');
+
+        let loadingButtonHtml = '<button type="button" id="disabledBtn" disabled>' +
+            '  Loading...' +
+            '</button>';
+        let form = document.getElementById('payment-form');
+        let submitButton = document.getElementById('submit-button');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            let clientSecret = '{{ object.intent_client_secret }}';
+            document.getElementById('submit-button').innerHTML = loadingButtonHtml;
+
+            stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: cardElement,
+                }
+            }).then(function (result) {
+                if (result.error) {
+                    document.getElementById('submit-button').innerHTML = 'Оплатить';
+                    document.getElementById('error-message').innerText = result.error.message;
+                } else {
+                    if (result.paymentIntent.status === 'succeeded') {
+                        let formData = new FormData();
+                        formData.append("is_paid", true);
+                        $.ajax({
+                            headers: {"X-CSRFToken": "{{csrf_token}}"},
+                            url: `{% url 'api_product:order-retrieve-update' object.id %}`,
+                            processData: false,
+                            contentType: false,
+                            method: 'PATCH',
+                            data: formData,
+                            success: function (data) {
+                                window.location.href = "{% url 'product:order_list' %}";
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Произошла ошибка:", status, error);
+                            },
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

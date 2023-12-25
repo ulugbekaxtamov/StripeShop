@@ -1,7 +1,9 @@
-Django==3.2.23
-djangorestframework==3.14.0
-drf-yasg==1.21.7
-gunicorn==21.2.0
-Pillow==10.1.0
-psycopg2-binary==2.9.9
-python-dotenv==1.0.0
+Django==3.2.*
+djangorestframework==3.14.*
+drf-yasg==1.21.*
+gunicorn==21.2.*
+Pillow==10.1.*
+psycopg2-binary==2.9.*
+python-dotenv==1.0.*
+stripe==7.10.*
+django-active-link==0.1.*
