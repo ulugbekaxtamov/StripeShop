@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <div class="orders-container">
+        {% for order in order_list %}
+            <div class="order-item">
+                <div class="order-info">
+                    <h3 class="order-title">Заказ #{{ order.id }}</h3>
+                    <p class="order-date">Дата: {{ order.created_at|date:"Y-m-d H:i" }}</p>
+                    <p class="order-products">Продукты: ({{ order.items.count }}) щт
+                        - {{ order.get_total_item_price }} {{ order.get_currency_display }}</p>
+                    <p class="order-discount">Скидка: {{ order.discount.percentage|default:" - " }}%</p>
+                    <p class="order-discount">Налог: {{ order.tax.percentage|default:" - " }}%</p>
+                    <p class="order-total">Итого: {{ order.get_total_amount }} {{ order.get_currency_display }}</p>
+                </div>
+                {% if not order.is_paid %}
+                    <a class="btn view-details-btn" href="{% url 'product:order_pay'  order.id %}">Оплатить</a>
+                {% else %}
+                    <p class="order-status">Статус: Оплачено</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+
+{% block script %}
+{% endblock %}

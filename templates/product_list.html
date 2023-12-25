@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <div class="product-container">
+        {% for item in item_list %}
+            <div class="product-card" data-item-id="{{ item.id }}">
+                <img src="{{ item.image.url }}" alt="Product {{ item.id }}">
+                <div class="product-info">
+                    <h2>{{ item.name }}</h2>
+                    <p>{{ item.description }}</p>
+                    <p>Цена: {{ item.price }} {{ item.get_currency_display }}</p>
+
+                    <button class="btn buy-now-btn" data-item-id="{{ item.id }}">Купить в один клик</button>
+
+                    {% if item.id in cart_list %}
+                        <a href="{% url 'product:cart_list' %}" class="btn to-cart-btn">Перейти</a>
+                    {% else %}
+                        <button class="btn cart-btn" onclick="addToCart('{{ item.id }}')">В корзину</button>
+                        <a href="{% url 'product:cart_list' %}" class="btn to-cart-btn hidden">Перейти</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        {#    Add Item in Cart#}
+
+        let cartCount = {{ cart_count }};
+
+        function addToCart(itemId) {
+            $.ajax({
+                type: 'POST',
+                url: `/api/v1/product/cart/add/${itemId}/`,
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                dataType: 'json',
+                success: function (data) {
+                    cartCount++;
+                    document.getElementById('cartCount').innerText = cartCount;
+                    document.querySelector(`[data-item-id="${itemId}"] .cart-btn`).classList.add('hidden');
+                    document.querySelector(`[data-item-id="${itemId}"] .to-cart-btn`).classList.remove('hidden');
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
+        }
+    </script>
+
+    {# Buy Item  #}
+    <script>
+        document.querySelectorAll('.buy-now-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                let loadingButtonHtml = '<button class="btn btn-primary" type="button" id="disabledBtn" disabled>' +
+                    '  Loading...' +
+                    '  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>' +
+                    '</button>';
+
+                this.insertAdjacentHTML('afterend', loadingButtonHtml);
+
+                this.style.display = 'none';
+                let itemId = this.getAttribute('data-item-id');
+                buyItem(itemId);
+            });
+        });
+
+        function buyItem(itemId) {
+            fetch(`/api/v1/product/buy/item/${itemId}`, {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.session_id) {
+                        let stripe = Stripe('{{ stripe_public_key }}');
+                        stripe.redirectToCheckout({sessionId: data.session_id});
+                    } else {
+                        alert("Проблема при получении session_id");
+                    }
+                })
+                .catch(error => {
+                    alert('Ошибка при выполнении запроса:', error);
+                });
+        }
+    </script>
+
+{% endblock %}

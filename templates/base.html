@@ -1,0 +1,35 @@
+{% load static %}
+{% load active_link_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<nav>
+    <a href="{% url 'product:item_list' %}" class="btn {% active_link 'product:item_list' 'active' %}">
+        Продукты
+    </a>
+    <a href="{% url 'product:order_list' %}" class="btn {% active_link 'product:order_list' 'active' %}">
+        Заказы
+    </a>
+    <a href="{% url 'product:cart_list' %}" class="btn {% active_link 'product:cart_list' 'active' %}">
+        корзина <span id="cartCount">{{ cart_count }}</span>
+    </a>
+</nav>
+
+{% block content %}
+{% endblock %}
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+{% block script %}
+{% endblock %}
+</body>
+</html>

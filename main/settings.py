@@ -40,9 +40,11 @@ INSTALLED_APPS = [
 
     'drf_yasg',
     'rest_framework',
+    'active_link',
 
     'base',
     'user',
+    'product',
 ]
 
 MIDDLEWARE = [
@@ -60,7 +62,7 @@ AUTH_USER_MODEL = 'user.User'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -153,3 +155,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Stripe TOKEN
+STRIPE_SECRET_TOKEN = os.getenv('STRIPE_SECRET_TOKEN')
+STRIPE_PUBLIC_TOKEN = os.getenv('STRIPE_PUBLIC_TOKEN')

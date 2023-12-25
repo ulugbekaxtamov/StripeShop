@@ -1,0 +1,255 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #eee;
+    padding: 10px;
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.product-card {
+    border: 1px solid #ccc;
+    margin: 10px;
+    padding: 10px;
+    width: 200px;
+    text-align: center;
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+}
+
+.product-info {
+    margin-top: 10px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 5px;
+    text-decoration: none;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #555;
+}
+
+.buy-now-btn {
+    background-color: #4caf50;
+}
+
+.cart-btn {
+    background-color: #2196f3;
+}
+
+.to-cart-btn {
+    background-color: #fff;
+    color: #2196f3;
+}
+
+/* styles.css */
+
+
+#cartCount {
+    background-color: #ff4500;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.active {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+
+/* Cart */
+
+
+/* CSS для корзины */
+.cart-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    flex-wrap: wrap;
+    overflow-y: auto; /* Добавляем вертикальную прокрутку */
+    max-height: 600px; /* Максимальная высота контейнера */
+}
+
+.cart-items {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* CSS для карточек продуктов */
+.cart-item {
+    display: flex;
+    margin-bottom: 20px;
+    flex-basis: calc(33.33% - 20px); /* Устанавливаем ширину карточки для 3 карточек в ряду с отступами */
+    margin-right: 20px;
+    box-sizing: border-box;
+}
+
+.cart-img {
+    max-width: 100px;
+    margin-right: 20px;
+}
+
+.cart-item-info {
+    flex-grow: 1;
+}
+
+/* Остальные стили остаются без изменений */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 5px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #555;
+}
+
+.cart-remove-btn {
+    background-color: #ff4500;
+}
+
+.cart-summary {
+    width: 250px;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+.cart-summary-item {
+    margin-bottom: 20px;
+}
+
+.cart-checkout-btn {
+    background-color: #4caf50;
+}
+
+/* Order */
+/* orders-styles.css */
+.orders-container {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Горизонтальное размещение с авто-шириной */
+    grid-gap: 10px; /* Расстояние между карточками */
+}
+
+.order-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.order-info {
+    flex-grow: 1;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 5px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #555;
+}
+
+.view-details-btn {
+    background-color: #2196f3;
+    color: #fff;
+}
+
+
+.container {
+    width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.left-section {
+    width: 45%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.right-section {
+    width: 45%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.stripe-input {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#card-element {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#submit-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
