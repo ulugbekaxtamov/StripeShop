@@ -131,4 +131,5 @@ class PaymentOrderAPIView(APIView):
         order.intent_id = payment_intent.id
         order.intent_client_secret = payment_intent.client_secret
         order.save()
+        cart.clear()
         return Response({"order_id": order.id})

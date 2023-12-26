@@ -6,6 +6,7 @@ class CartSession:
         CartSession manages a shopping cart session for a user.
         It handles adding, removing items, and calculating totals in the cart.
     """
+
     def __init__(self, request):
         self.session = request.session
         cart_session = self.session.get('cart')
@@ -23,12 +24,11 @@ class CartSession:
             self.cart.remove(item_id)
             self.save()
 
+    def clear(self):
+        self.session['cart'] = []
+
     def save(self):
         self.session.modified = True
-
-    def clear(self):
-        self.cart = []
-        self.save()
 
     def get_cart_items(self):
         item_ids = self.cart
