@@ -5,27 +5,24 @@
 {% endblock %}
 
 {% block content %}
-    <p>налог: 3% скидка: 10% (при покупке более 3-х товаров)</p>
     <div class="product-container">
-        {% for item in item_list %}
-            <div class="product-card" data-item-id="{{ item.id }}">
-                <img src="{{ item.image.url }}" alt="Product {{ item.id }}">
-                <div class="product-info">
-                    <h2><a href="{% url 'product:item_detail' item.id %}">{{ item.name }}</a></h2>
-                    <p>{{ item.description }}</p>
-                    <p>Цена: {{ item.price }} {{ item.get_currency_display }}</p>
+        <div class="product-card" data-item-id="{{ object.id }}">
+            <img src="{{ object.image.url }}" alt="Product {{ object.id }}">
+            <div class="product-info">
+                <h2>{{ object.name }}</h2>
+                <p>{{ object.description }}</p>
+                <p>Цена: {{ object.price }} {{ object.get_currency_display }}</p>
 
-                    <button class="btn buy-now-btn" data-item-id="{{ item.id }}">Купить в один клик</button>
+                <button class="btn buy-now-btn" data-item-id="{{ object.id }}">Купить в один клик</button>
 
-                    {% if item.id in cart_list %}
-                        <a href="{% url 'product:cart_list' %}" class="btn to-cart-btn">Перейти</a>
-                    {% else %}
-                        <button class="btn cart-btn" onclick="addToCart('{{ item.id }}')">В корзину</button>
-                        <a href="{% url 'product:cart_list' %}" class="btn to-cart-btn hidden">Перейти</a>
-                    {% endif %}
-                </div>
+                {% if object.id in cart_list %}
+                    <a href="{% url 'product:cart_list' %}" class="btn to-cart-btn">Перейти</a>
+                {% else %}
+                    <button class="btn cart-btn" onclick="addToCart('{{ object.id }}')">В корзину</button>
+                    <a href="{% url 'product:cart_list' %}" class="btn to-cart-btn hidden">Перейти</a>
+                {% endif %}
             </div>
-        {% endfor %}
+        </div>
     </div>
 {% endblock %}
 
