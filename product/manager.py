@@ -2,6 +2,10 @@ from product.models import Item, Discount, Tax
 
 
 class CartSession:
+    """
+        CartSession manages a shopping cart session for a user.
+        It handles adding, removing items, and calculating totals in the cart.
+    """
     def __init__(self, request):
         self.session = request.session
         cart_session = self.session.get('cart')
@@ -31,6 +35,11 @@ class CartSession:
         return Item.objects.filter(id__in=item_ids)
 
     def get_total_price_items(self, target_currency="usd"):
+        """
+            Calculates the total price of items in the cart.
+            Sums the prices of all items in the cart, converting them to the target currency.
+        """
+
         total = 0
 
         for item_id in self.cart:
@@ -40,6 +49,12 @@ class CartSession:
         return round(total, 2)
 
     def get_total_amount(self, target_currency="usd"):
+        """
+            Calculates the total amount for the cart.
+            Includes the effects of the latest tax and any applicable discount.
+            Returns a dictionary with the total amount, total price of items, tax, and discount.
+        """
+
         tax = Tax.objects.last()
         tax = tax.percentage if tax else 0
 
